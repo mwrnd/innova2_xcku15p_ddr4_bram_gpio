@@ -1,4 +1,4 @@
-# Innova-2 Flex XCKU15P DDR4 and GPIO Demo
+# Innova-2 Flex XCKU15P XDMA DDR4 and GPIO Demo
 
 This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) project for the [Innova-2 Flex SmartNIC MNV303212A-ADL](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements DDR4 and a GPIO output to one of the LEDs. The other LED is connected to a divided down clock and blinks every couple of seconds.
 
@@ -70,7 +70,7 @@ od -A x -t x1z -v  RECV
 
 Memory Management prevents data reads from uninitialized memory. DDR4 must first be written to before it can be read from.
 
-Your system must have enough free memory to test the DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above. Note `512MiB = 536870912 = 0x20000000` and `128MiB = 134217728 = 0x8000000` which could be generated using `bs=8192 count=16384`. To test the full memory array you can increase the address by the data size until all `8Gib = 8589934592 = 0x200000000` has been tested. If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
+Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above. Note `512MiB = 536870912 = 0x20000000` and `128MiB = 134217728 = 0x8000000` which could be generated using `bs=8192 count=16384`. To test the full memory array you can increase the address by the data size until all `8Gib = 8589934592 = 0x200000000` has been tested. If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
 free -m
