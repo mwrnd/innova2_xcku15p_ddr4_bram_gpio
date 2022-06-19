@@ -1,4 +1,4 @@
-# Innova-2 Flex XCKU15P XDMA DDR4 and GPIO Demo
+# Innova-2 Flex XCKU15P XDMA PCIe DDR4 GPIO Demo
 
 This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) project for the [Innova-2 Flex SmartNIC MNV303212A-ADL](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements DDR4 and a GPIO output to one of the LEDs. The other LED is connected to a divided down clock and blinks every couple of seconds.
 
