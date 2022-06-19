@@ -48,20 +48,20 @@ sha256sum TEST RECV
 
 ![User LED](img/User_LEDs_on_Innova2.png)
 
-The design includes an [AXI GPIO](pg144-axi-gpio.pdf) block to control Pin A6, the *D19* LED on the back of the Innova-2. The LED can be turned off by writing a `0x01` to the `GPIO_DATA` Register. Only a single bit is enabled in the port so excess bit writes are ignored. No direction control writes are necessary as the port is set up for output-only (the `GPIO_TRI` Direction Control Register is fixed at `0xffffffff`).
+The design includes an [AXI GPIO](https://docs.xilinx.com/v/u/3.0-English/ds744_axi_gpio) block to control Pin A6, the *D19* LED on the back of the Innova-2. The LED can be turned off by writing a `0x01` to the `GPIO_DATA` Register. Only a single bit is enabled in the port so excess bit writes are ignored. No direction control writes are necessary as the port is set up for output-only (the `GPIO_TRI` Direction Control Register is fixed at `0xffffffff`).
 
 ![AXI GPIO](img/AXI_GPIO.png)
 
-The commands below should turn off then turn on the *D19* LED. First, two one-byte files are created, an all-ones byte and an all-zeros byte. These are then sent to address `0x200110000`, the `GPIO_DATA` Register. As only a single bit is enabled in the block design, reading from `GPIO_DATA` returns `0x01` when the LED is off.
+The commands below should turn off then turn on the *D19* LED. First, two one-byte files are created, an all-ones byte and an all-zeros byte. These are then sent to address `0x200110000`, the `GPIO_DATA` Register. As only a single bit is enabled in the block design, reading from `GPIO_DATA` returns `0x01` when the LED is off and `0x00` when it is on.
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
-echo -n -e "\xff" >ff.bin   ;   od -A x -t x1z -v ff.bin
-echo -n -e "\x00" >00.bin   ;   od -A x -t x1z -v 00.bin
-ls -l ff.bin 00.bin
+echo -n -e "\xff" >ff.bin   ;   od -A x -t x1z -v  ff.bin
+echo -n -e "\x00" >00.bin   ;   od -A x -t x1z -v  00.bin
+ls -l  ff.bin  00.bin
 sudo ./dma_to_device   --verbose --device /dev/xdma0_h2c_0 --address 0x200110000 --size 1 -f     ff.bin
 sudo ./dma_to_device   --verbose --device /dev/xdma0_h2c_0 --address 0x200110000 --size 1 -f     00.bin
 sudo ./dma_from_device --verbose --device /dev/xdma0_c2h_0 --address 0x200110000 --size 8 --file RECV
-od -A x -t x1z -v RECV
+od -A x -t x1z -v  RECV
 ```
 
 ![XDMA GPIO Test](img/XDMA_GPIO_Test.png)
@@ -111,4 +111,6 @@ Click on *Generate Bitstream*.
 When synthesis and implementation complete after about an hour and Vivado generates a programming Bitstream, run *Write Memory Configuration File*, select *bin*, *mt25qu512_x1_x2_x4_x8*, *SPIx8*, *Load bitstream files*, and a location and name for the output binary files. The bitstream will end up in the `innova2_xcku15p_ddr4_bram_gpio/innova2_xcku15p_ddr4_bram_gpio.runs/impl_1` directory as `design_1_wrapper.bit`. Vivado will add the `_primary.bin` and `_secondary.bin` extensions as the Innova-2 uses dual MT25QU512 FLASH ICs in x8 for high speed programming.
 
 ![Write Memory Configuration File](img/Vivado_Write_Memory_Configuration_File.png)
+
+Proceed to [Loading a User Image](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#loading-a-user-image)
 
