@@ -1,8 +1,8 @@
 # Innova-2 Flex XCKU15P XDMA PCIe DDR4 GPIO Demo
 
-This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) project for the [Innova-2 Flex SmartNIC MNV303212A-ADL](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements DDR4 and a GPIO output to one of the LEDs. The other LED is connected to a divided down clock and blinks every couple of seconds.
+This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) project for the [XCKU15P](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADL](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements DDR4 and a GPIO output to one of the LEDs. The other LED is connected to a divided down clock and blinks every couple of seconds.
 
-![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png){width=800}
+![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png)
 
 Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including [dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers).
 
@@ -18,7 +18,17 @@ b9f013751c980a68a3db0373ca14d279f619dd59f6a5ac488f43d13e540c193b  innova2_xcku15
 
 ## Testing the Design
 
-After rebooting, communicate with the design using the Xilinx XDMA Test programs from *dma_ip_drivers*. The following memory map is used by the block design.
+After rebooting, the design should show up as `RAM memory: Xilinx Corporation Device 9038`. It shows up at PCIe Bus Address `03:00` for me.
+
+```
+lspci | grep -i Xilinx
+sudo lspci  -s 03:00  -v
+sudo lspci  -s 03:00  -vvv | grep "LnkCap\|LnkSta"
+```
+
+![lspci Xilinx 9038](img/lspci_RAM_Memory_Xilinx_Corporation_Device_9038.png)
+
+Communicate with the design using the Xilinx XDMA Test programs from *dma_ip_drivers*. The following memory map is used by the block design.
 
 ![Address Map Layout](img/Address_Map_Layout.png)
 
@@ -70,7 +80,11 @@ od -A x -t x1z -v  RECV
 
 Memory Management prevents data reads from uninitialized memory. DDR4 must first be written to before it can be read from.
 
-Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above. Note `512MiB = 536870912 = 0x20000000` and `128MiB = 134217728 = 0x8000000` which could be generated using `bs=8192 count=16384`. To test the full memory array you can increase the address by the data size until all `8Gib = 8589934592 = 0x200000000` has been tested. If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
+Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above. Note `512MiB = 536870912 = 0x20000000`. `128MiB = 134217728 = 0x8000000` which can be generated with `dd` using the `bs=8192 count=16384` options.
+
+To test the full memory array you can increase the address by the data size enough times that all `8Gib = 8589934592 = 0x200000000` has been tested. If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
+
+`vbindiff DATA RECV` can be used to determine differences between the sent and received data if checksums do not match.
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
 free -m
@@ -113,4 +127,31 @@ When synthesis and implementation complete after about an hour and Vivado genera
 ![Write Memory Configuration File](img/Vivado_Write_Memory_Configuration_File.png)
 
 Proceed to [Loading a User Image](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#loading-a-user-image)
+
+
+## Block Design Customization Options
+
+### XDMA
+
+The Innova-2's XCKU15P is wired for **x8** PCIe at *PCIe Block Location:* **X0Y2**. It is capable of **8.0 GT/s** Link Speed.
+
+![XDMA Basic Customizations](img/XDMA_Customization_Options-Basic.png)
+
+For this design I set the PCIe *Base Class* to **Memory Controller** and the *Sub-Class* to **RAM**.
+
+![XDMA PCIe ID Customizations](img/XDMA_Customization_Options-PCIe_ID.png)
+
+I disable the **Configuration Management Interface**.
+
+![XDMA Misc Customizations](img/XDMA_Customization_Options-Misc.png)
+
+### DDR4
+
+The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in *innova2_ku15p_MT40A1G16.csv* for the **MT40A1G16**. *Data Mask and DBI* is set to **NO DM DBI WR RD**.
+
+![DDR4 Basic Configuration](img/DDR4_Customization_Options-Basic.png)
+
+The *Arbitration Scheme* is set to **Round Robin**.
+
+![DDR4 AXI Configuration](img/DDR4_Customization_Options-AXI_Options.png)
 
