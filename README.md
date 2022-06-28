@@ -96,6 +96,16 @@ sha256sum DATA RECV
 
 ![XDMA DDR4 Test](img/XDMA_DDR4_Test.png)
 
+
+#### DDR4 Communication Error
+
+If you attempt to send data to the DDR4 address but get `write file: Unknown error 512` it means DDR4 did not initialize properly. Refer to the `innova2_flex_xcku15p_notes` project's [DDR4 Troubleshooting Notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#ddr4-communication-error).
+```Shell
+sudo ./dma_to_device   --verbose --device /dev/xdma0_h2c_0 --address 0x0 --size 8192  -f    TEST
+```
+
+![Error 512](img/XDMA_DDR4_Communication_Failure_Error_512.png)
+
 ### XDMA Performance
 
 Xilinx's *dma_ip_drivers* include a simple performance measurement tool which tests at address `0x0` with a default transfer size of 32kb.
