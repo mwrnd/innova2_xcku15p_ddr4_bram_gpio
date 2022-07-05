@@ -99,7 +99,7 @@ sha256sum DATA RECV
 
 #### DDR4 Communication Error
 
-If you attempt to send data to the DDR4 address but get `write file: Unknown error 512` it means DDR4 did not initialize properly. Refer to the `innova2_flex_xcku15p_notes` project's [DDR4 Troubleshooting Notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#ddr4-communication-error).
+If you attempt to send data to the DDR4 address but get `write file: Unknown error 512` it means DDR4 did not initialize properly. Refer to the `innova2_flex_xcku15p_notes` project's [DDR4 Troubleshooting Notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/tree/main/Troubleshooting#readme).
 ```Shell
 sudo ./dma_to_device   --verbose --device /dev/xdma0_h2c_0 --address 0x0 --size 8192  -f    TEST
 ```
@@ -157,7 +157,7 @@ I disable the **Configuration Management Interface**.
 
 ### DDR4
 
-The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in *innova2_ku15p_MT40A1G16.csv* for the **MT40A1G16**. *Data Mask and DBI* is set to **NO DM DBI WR RD**.
+The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in [innova2_ku15p_MT40A1G16.csv](innova2_ku15p_MT40A1G16.csv) for the [MT40A1G16](https://www.micron.com/products/dram/ddr4-sdram/part-catalog/mt40a1g16knr-075). *Data Mask and DBI* is set to **NO DM DBI WR RD**.
 
 ![DDR4 Basic Configuration](img/DDR4_Customization_Options-Basic.png)
 
