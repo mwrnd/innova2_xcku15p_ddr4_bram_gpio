@@ -32,7 +32,7 @@ sudo lspci  -s 03:00  -vvv | grep "LnkCap\|LnkSta"
 
 ![dmesg xdma](img/dmesg_xdma.png)
 
-Communicate with the design using the Xilinx XDMA Test programs from *dma_ip_drivers*. The following memory map is used by the block design.
+The following memory map is used by the block design when communicating using the Xilinx XDMA Test programs from *dma_ip_drivers*.
 
 ![Address Map Layout](img/Address_Map_Layout.png)
 
