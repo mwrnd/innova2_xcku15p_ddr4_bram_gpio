@@ -66,7 +66,7 @@ The design includes an [AXI GPIO](https://docs.xilinx.com/v/u/3.0-English/ds744_
 
 ![AXI GPIO](img/AXI_GPIO.png)
 
-The commands below should turn off then turn on the *D19* LED. First, two one-byte files are created, an all-ones byte and an all-zeros byte. These are then sent to address `0x200110000`, the `GPIO_DATA` Register. As only a single bit is enabled in the block design, reading from `GPIO_DATA` returns `0x01` when the LED is off and `0x00` when it is on.
+The commands below should turn off then turn on the *D19* LED. First, two one-byte files are created, a binary all-ones byte and a binary all-zeros byte. These are then sent to address `0x200110000`, the `GPIO_DATA` Register. As only a single bit is enabled in the block design, reading from `GPIO_DATA` returns `0x00000001` when the LED is off and `0x00000000` when it is on.
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
 echo -n -e "\xff" >ff.bin   ;   od -A x -t x1z -v  ff.bin
@@ -84,7 +84,7 @@ od -A x -t x1z -v  RECV
 
 Memory Management prevents data reads from uninitialized memory. DDR4 must first be written to before it can be read from.
 
-Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above.
+Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted earlier.
 
 The `dd` command is used to generate a file (`of=DATA`) from pseudo-random data (`if=/dev/urandom`). The value for Block Size (`bs`) will be multiplied by the value for `count` to produce the size in bytes of the output file. For example, `8192*65536=536870912=0x20000000=512MiB`. Use a block size (`bs=`) that is a multiple of your drive's block size. `df .` informs you on which drive your current directory is located. `dumpe2fs /dev/sda1 | grep "Block size"` will tell you the drive's block size.
 
@@ -122,6 +122,7 @@ Xilinx's *dma_ip_drivers* include a simple performance measurement tool which te
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
 sudo ./performance --device /dev/xdma0_h2c_0
+sudo ./performance --device /dev/xdma0_c2h_0
 ```
 
 ![XDMA dma_ip_drivers performance](img/xdma_performance.png)
@@ -171,7 +172,7 @@ The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Tra
 
 ![DDR4 Basic Configuration](img/DDR4_Customization_Options-Basic.png)
 
-*Data Mask and DBI* is set to **NO DM DBI WR RD** which automatically enables ECC.
+*Data Mask and DBI* is set to **NO DM DBI WR RD** which automatically enables ECC on a 72-Bit interface.
 
 ![When is ECC Enabled](img/DDR4_72-Bit_When_Is_ECC_Enabled.png)
 
