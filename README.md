@@ -4,7 +4,7 @@ This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.h
 
 ![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png)
 
-Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including [dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers).
+Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including Xilinx's PCIe XDMA Drivers, [dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers).
 
 ## Program the Design into the XCKU15P Configuration Memory
 
