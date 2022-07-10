@@ -28,6 +28,10 @@ sudo lspci  -s 03:00  -vvv | grep "LnkCap\|LnkSta"
 
 ![lspci Xilinx 9038](img/lspci_RAM_Memory_Xilinx_Corporation_Device_9038.png)
 
+`dmesg | grep -i xdma` provides details on how Xilinx's PCIe XDMA driver has loaded.
+
+![dmesg xdma](img/dmesg_xdma.png)
+
 Communicate with the design using the Xilinx XDMA Test programs from *dma_ip_drivers*. The following memory map is used by the block design.
 
 ![Address Map Layout](img/Address_Map_Layout.png)
@@ -80,9 +84,15 @@ od -A x -t x1z -v  RECV
 
 Memory Management prevents data reads from uninitialized memory. DDR4 must first be written to before it can be read from.
 
-Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above. Note `512MiB = 536870912 = 0x20000000`. `128MiB = 134217728 = 0x8000000` which can be generated with `dd` using the `bs=8192 count=16384` options.
+Your system must have enough free memory to test DDR4 DMA transfers. Run `free -m` to determine how much RAM you have available and keep the amount of data to transfer below that. The commands below generate 512MB of random data then transfer it to and from the Innova-2. The address of the DDR4 is `0x0` as noted above.
 
-To test the full memory array you can increase the address by the data size enough times that all `8Gib = 8589934592 = 0x200000000` has been tested. If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
+The `dd` command is used to generate a file (`of=DATA`) from pseudo-random data (`if=/dev/urandom`). The value for Block Size (`bs`) will be multiplied by the value for `count` to produce the size in bytes of the output file. For example, `8192*65536=536870912=0x20000000=512MiB`. Use a block size (`bs=`) that is a multiple of your drive's block size. `df .` informs you on which drive your current directory is located. `dumpe2fs /dev/sda1 | grep "Block size"` will tell you the drive's block size.
+
+Note `128MiB = 134217728 = 0x8000000` which can be generated with `dd` using the `bs=8192 count=16384` options.
+
+To test the full 8GB of memory you can increment the address by the data size enough times that all `8Gib = 8589934592 = 0x200000000` has been tested.
+
+If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
 
 `vbindiff DATA RECV` can be used to determine differences between the sent and received data if checksums do not match.
 ```Shell
@@ -157,11 +167,15 @@ I disable the **Configuration Management Interface**.
 
 ### DDR4
 
-The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in [innova2_ku15p_MT40A1G16.csv](innova2_ku15p_MT40A1G16.csv) for the [MT40A1G16](https://www.micron.com/products/dram/ddr4-sdram/part-catalog/mt40a1g16knr-075). *Data Mask and DBI* is set to **NO DM DBI WR RD**.
+The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in [innova2_ku15p_MT40A1G16.csv](innova2_ku15p_MT40A1G16.csv) for the [MT40A1G16](https://www.micron.com/products/dram/ddr4-sdram/part-catalog/mt40a1g16knr-075).
 
 ![DDR4 Basic Configuration](img/DDR4_Customization_Options-Basic.png)
 
-The *Arbitration Scheme* is set to **Round Robin**.
+*Data Mask and DBI* is set to **NO DM DBI WR RD** which automatically enables ECC.
+
+![When is ECC Enabled](img/DDR4_72-Bit_When_Is_ECC_Enabled.png)
+
+The *Arbitration Scheme* is set to **Round Robin** under AXI Options.
 
 ![DDR4 AXI Configuration](img/DDR4_Customization_Options-AXI_Options.png)
 
