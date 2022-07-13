@@ -81,7 +81,7 @@ od -A x -t x1z -v  RECV
 
 ![XDMA GPIO Test](img/XDMA_GPIO_Test.png)
 
-### DDR4 Communication
+### DDR4 Communication and Throughput
 
 Memory Management prevents data reads from uninitialized memory. DDR4 must first be written to before it can be read from.
 
@@ -102,7 +102,9 @@ To test the full 8GB of memory you can increment the address by the data size en
 
 If you have 8GB+ of free memory space, generate 8GB of random data with the `dd` command options `bs=8192 count=1048576` and test the DDR4 in one go.
 
-`vbindiff DATA RECV` can be used to determine differences between the sent and received data if checksums do not match.
+If checksums do not match, `vbindiff DATA RECV` can be used to determine differences between the sent and received data and the failing address locations.
+
+Note that data is loaded from your system drive into memory then sent to the Innova-2 over PCIe DMA. Likewise it is loaded from the Innova-2's DDR4 into system RAM, then onto disk. The wall time of these functions can therefore be significantly longer than the DMA Memory-to-Memory over PCIe transfer time.
 ```Shell
 cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
 free -m
@@ -113,6 +115,34 @@ sha256sum DATA RECV
 ```
 
 ![XDMA DDR4 Test](img/XDMA_DDR4_Test.png)
+
+
+#### Test DDR4 Correct Data Retention
+
+
+Test the first `1GB = 1073741824 bytes` of the DDR4 memory space using a binary all-zeros file.
+```
+cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
+free -m
+dd if=/dev/zero of=DATA bs=8192 count=131072
+sudo ./dma_to_device   -v -d /dev/xdma0_h2c_0 --address 0x0 --size 1073741824 -f DATA
+sudo ./dma_from_device -v -d /dev/xdma0_c2h_0 --address 0x0 --size 1073741824 -f RECV
+md5sum DATA RECV
+```
+
+![Test DDR4 With All-Zeros File](img/DDR4_Test_With_All_Zeros_File.png)
+
+Test the first `1GB = 1073741824 bytes` of the DDR4 memory space using a binary [all-ones file](https://stackoverflow.com/questions/10905062/how-do-i-get-an-equivalent-of-dev-one-in-linux).
+```
+cd ~/dma_ip_drivers/XDMA/linux-kernel/tools/
+free -m
+tr '\0' '\377' </dev/zero | dd of=DATA bs=8192 count=131072 iflag=fullblock
+sudo ./dma_to_device   -v -d /dev/xdma0_h2c_0 --address 0x0 --size 1073741824 -f DATA
+sudo ./dma_from_device -v -d /dev/xdma0_c2h_0 --address 0x0 --size 1073741824 -f RECV
+md5sum DATA RECV
+```
+
+![Test DDR4 With All-Ones File](img/DDR4_Test_With_All_Ones_File.png)
 
 
 #### DDR4 Communication Error
