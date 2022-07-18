@@ -1,6 +1,6 @@
 # Innova-2 Flex XCKU15P XDMA PCIe DDR4 GPIO Demo
 
-This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADL](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if XDMA is working.
+This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADLT](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if XDMA is working.
 
 ![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png)
 
@@ -13,8 +13,8 @@ Refer to the `innova2_flex_xcku15p_notes` project's instructions on [Loading a U
 ```
 cd innova2_xcku15p_ddr4_bram_gpio
 md5sum *bin
-a07d4e9c498d6ff622a6ec00cb71ed0a  innova2_xcku15p_ddr4_bram_gpio_primary.bin
-1bca96206beb99a064d0dc7367b1f0e3  innova2_xcku15p_ddr4_bram_gpio_secondary.bin
+echo a07d4e9c498d6ff622a6ec00cb71ed0a should be md5sum of innova2_xcku15p_ddr4_bram_gpio_primary.bin
+echo 1bca96206beb99a064d0dc7367b1f0e3 should be md5sum of innova2_xcku15p_ddr4_bram_gpio_secondary.bin
 ```
 
 ## Testing the Design
@@ -39,10 +39,10 @@ The following memory map is used by the block design when communicating using th
 
 | Block        | Address (Hex)      | Size  |
 | ------------ |:------------------:| :---: |
-| DDR4         | 0x0000000000000000 |  8G   |
-| DDR4 Control | 0x0000000200000000 |  1M   |
-| BRAM         | 0x0000000200100000 |  8K   |
-| GPIO         | 0x0000000200110000 |  64K  |
+| DDR4         | 0x000000000 |  8G   |
+| DDR4 Control | 0x200000000 |  1M   |
+| BRAM         | 0x200100000 |  8K   |
+| GPIO         | 0x200110000 |  64K  |
 
 
 ### AXI BRAM Communication
