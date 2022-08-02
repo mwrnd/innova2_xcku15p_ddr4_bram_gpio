@@ -6,6 +6,23 @@ This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.h
 
 Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including Xilinx's PCIe XDMA Drivers, [dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers).
 
+
+# Table of Contents
+
+ * [Program the Design into the XCKU15P Configuration Memory](#program-the-design-into-the-xcku15p-configuration-memory)
+ * [Testing the Design](#testing-the-design)
+    * [AXI BRAM Communication](#axi-bram-communication)
+    * [AXI GPIO Control](#axi-gpio-control)
+    * [DDR4 Communication and Throughput](#ddr4-communication-and-throughput)
+       * [Test DDR4 Correct Data Retention](#test-ddr4-correct-data-retention)
+       * [DDR4 Communication Error](#ddr4-communication-error)
+    * [XDMA Performance](#xdma-performance)
+ * [Recreating the Design in Vivado](#recreating-the-design-in-vivado)
+ * [Block Design Customization Options](#block-design-customization-options)
+    * [XDMA](#xdma)
+    * [DDR4](#ddr4)
+
+
 ## Program the Design into the XCKU15P Configuration Memory
 
 Refer to the `innova2_flex_xcku15p_notes` project's instructions on [Loading a User Image](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#loading-a-user-image). Binary Memory Configuration Files are included in this project.
@@ -37,12 +54,12 @@ The following memory map is used by the block design when communicating using th
 
 ![Address Map Layout](img/Address_Map_Layout.png)
 
-| Block        | Address (Hex)      | Size  |
-| ------------ |:------------------:| :---: |
-| DDR4         | 0x000000000 |  8G   |
-| DDR4 Control | 0x200000000 |  1M   |
-| BRAM         | 0x200100000 |  8K   |
-| GPIO         | 0x200110000 |  64K  |
+| Block        | Address (Hex) | Size  |
+| ------------ |:-------------:| :---: |
+| DDR4         | 0x000000000   |  8G   |
+| DDR4 Control | 0x200000000   |  1M   |
+| BRAM         | 0x200100000   |  8K   |
+| GPIO         | 0x200110000   |  64K  |
 
 
 ### AXI BRAM Communication
@@ -147,7 +164,7 @@ md5sum DATA RECV
 
 #### DDR4 Communication Error
 
-If you attempt to send data to the DDR4 address but get `write file: Unknown error 512` it means DDR4 did not initialize properly. Proceed to the [Innova-2 DDR4 Troubleshooting](https://github.com/mwrnd/innova2_ddr4_troubleshooting) project.
+If you attempt to send data to the DDR4 address but get `write file: Unknown error 512` it means DDR4 did not initialize properly or the AXI bus has encountered an error and stalled. Proceed to the [Innova-2 DDR4 Troubleshooting](https://github.com/mwrnd/innova2_ddr4_troubleshooting) project.
 ```Shell
 sudo ./dma_to_device --verbose --device /dev/xdma0_h2c_0 --address 0x0 --size 8192 -f TEST
 ```
