@@ -1,10 +1,13 @@
 # Innova-2 Flex XCKU15P XDMA PCIe DDR4 GPIO Demo
 
-This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADLT](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if XDMA is working.
+This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADLT](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if the XDMA block has an active clock output.
 
 ![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png)
 
 Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including Xilinx's PCIe XDMA Drivers, [dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers).
+
+A test version for the [4GB MNV303212A-ADIT variant is available](https://github.com/mwrnd/innova2_ddr4_troubleshooting/tree/main/test_adit_mt40a512m16).
+
 
 
 # Table of Contents
@@ -25,7 +28,7 @@ Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_
 
 ## Program the Design into the XCKU15P Configuration Memory
 
-Refer to the `innova2_flex_xcku15p_notes` project's instructions on [Loading a User Image](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#loading-a-user-image). Binary Memory Configuration Files are included in this project.
+Refer to the `innova2_flex_xcku15p_notes` project's instructions on [Loading a User Image](https://github.com/mwrnd/innova2_flex_xcku15p_notes/#loading-a-user-image). Binary Memory Configuration Bitstream Files are included in this project.
 
 ```
 cd innova2_xcku15p_ddr4_bram_gpio
@@ -227,7 +230,7 @@ I disable the **Configuration Management Interface**.
 
 ### DDR4
 
-The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.4MHz. This project includes a custom part definition in [innova2_ku15p_MT40A1G16.csv](innova2_ku15p_MT40A1G16.csv) for the [MT40A1G16](https://www.micron.com/products/dram/ddr4-sdram/part-catalog/mt40a1g16knr-075).
+The DDR4 is configured for a Memory Speed of **833**ps = 1200MHz = 2400 MT/s Transfer Rate. The DDR4 reference clock is **9996**ps = 100.04MHz. This project includes a custom part definition in [innova2_ku15p_MT40A1G16.csv](innova2_ku15p_MT40A1G16.csv) for the [MT40A1G16](https://www.micron.com/products/dram/ddr4-sdram/part-catalog/mt40a1g16knr-075).
 
 ![DDR4 Basic Configuration](img/DDR4_Customization_Options-Basic.png)
 
