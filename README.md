@@ -1,6 +1,6 @@
 # Innova-2 Flex XCKU15P XDMA PCIe DDR4 GPIO Demo
 
-This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the the [Innova-2 Flex SmartNIC MNV303212A-ADLT](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if the XDMA block has an active clock output.
+This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2021-2.html) starter project for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the [Innova-2 Flex SmartNIC MNV303212A-ADLT](https://www.nvidia.com/en-us/networking/ethernet/innova-2-flex/) that implements a PCIe XDMA interface to DDR4 and BRAM, and a GPIO output to one of the LEDs. The other LED is connected to a divided down PCIe clock and blinks every couple of seconds if the XDMA block has an active clock output.
 
 ![Block Design](img/innova2_xcku15p_ddr4_bram_gpio_block_design.png)
 
