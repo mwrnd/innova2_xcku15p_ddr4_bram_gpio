@@ -187,7 +187,9 @@ sudo ./performance --device /dev/xdma0_c2h_0
 
 ## Recreating the Design in Vivado
 
-Run the `source` command from the main Vivado **2021.2** window. Only some versions of Vivado successfully implement this block design.
+Refer to [Vivado XDMA DDR4 Tutorial](https://github.com/mwrnd/notes/tree/main/Vivado_XDMA_DDR4_Tutorial) for detailed notes on recreating a similar design starting with a blank project.
+
+To recreate this design, run the `source` command from the main Vivado **2021.2** window. Only some versions of Vivado successfully implement this block design.
 
 ```
 cd innova2_xcku15p_ddr4_bram_gpio
