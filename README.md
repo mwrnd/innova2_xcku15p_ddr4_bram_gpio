@@ -10,6 +10,9 @@ Refer to [this tutorial](https://github.com/mwrnd/notes/tree/main/Vivado_XDMA_DD
 
 A test version for the [4GB MNV303212A-ADIT variant is available](https://github.com/mwrnd/innova2_ddr4_troubleshooting/tree/main/test_adit_mt40a512m16).
 
+Here is a [simple Vivado 2022.2 demo project for the MNV303611A-EDLT without DDR](https://github.com/mwrnd/innova2_mnv303611a_xcku15p_xdma) which will also work with the MNV303212A-ADIT.
+
+
 
 
 # Table of Contents
