@@ -25,10 +25,13 @@ Here is a [simple Vivado 2022.2 demo project for the MNV303611A-EDLT without DDR
        * [Test DDR4 Correct Data Retention](#test-ddr4-correct-data-retention)
        * [DDR4 Communication Error](#ddr4-communication-error)
     * [XDMA Performance](#xdma-performance)
+    * [Communication Methods](#communication-methods)
  * [Recreating the Design in Vivado](#recreating-the-design-in-vivado)
  * [Block Design Customization Options](#block-design-customization-options)
     * [XDMA](#xdma)
     * [DDR4](#ddr4)
+
+
 
 
 ## Program the Design into the XCKU15P Configuration Memory
@@ -41,6 +44,8 @@ md5sum *bin
 echo a07d4e9c498d6ff622a6ec00cb71ed0a should be md5sum of innova2_xcku15p_ddr4_bram_gpio_primary.bin
 echo 1bca96206beb99a064d0dc7367b1f0e3 should be md5sum of innova2_xcku15p_ddr4_bram_gpio_secondary.bin
 ```
+
+
 
 ## Testing the Design
 
@@ -105,6 +110,7 @@ od -A x -t x1z -v  RECV
 ```
 
 ![XDMA GPIO Test](img/XDMA_GPIO_Test.png)
+
 
 ### DDR4 Communication and Throughput
 
@@ -179,6 +185,9 @@ sudo ./dma_to_device --verbose --device /dev/xdma0_h2c_0 --address 0x0 --size 81
 
 ![Error 512](img/XDMA_DDR4_Communication_Failure_Error_512.png)
 
+
+
+
 ### XDMA Performance
 
 Xilinx's *dma_ip_drivers* include a simple performance measurement tool which tests at address `0x0` with a default transfer size of 32kb.
@@ -189,6 +198,42 @@ sudo ./performance --device /dev/xdma0_c2h_0
 ```
 
 ![XDMA dma_ip_drivers performance](img/xdma_performance.png)
+
+
+
+
+### Communication Methods
+
+The XDMA Driver ([Xilinx's dma_ip_drivers](https://github.com/xilinx/dma_ip_drivers)) creates [read-only and write-only](https://manpages.debian.org/bookworm/manpages-dev/open.2.en.html#File_access_mode) [character device](https://en.wikipedia.org/wiki/Device_file#Character_devices) files, `/dev/xdma0_h2c_0` and `/dev/xdma0_c2h_0`, that allow direct access to the FPGA design's AXI Bus. To read from an AXI Device at address `0x200110000` you would read from address `0x200110000` of the `/dev/xdma0_c2h_0` (Card-to-Host) file. To write you would write to the appropriate address of `/dev/xdma0_h2c_0` (Host-to-Card).
+
+For example, to toggle the LED you can write to the appropriate address using [`dd`](https://manpages.debian.org/testing/coreutils/dd.1.en.html). Note `dd` requires numbers in Base-10 so you can use [`printf`](https://manpages.debian.org/testing/coreutils/printf.1.en.html) to convert from the hex address.
+```
+echo -n -e "\x00" >00.bin  ;  xxd -b 00.bin
+echo -n -e "\x01" >01.bin  ;  xxd -b 01.bin
+printf "%d\n" 0x200110000
+sudo dd if=00.bin of=/dev/xdma0_h2c_0 count=1 bs=1 seek=8591048704
+sudo dd if=01.bin of=/dev/xdma0_h2c_0 count=1 bs=1 seek=8591048704
+```
+
+![Toggle LED using dd](img/dd_LED_Toggle.png)
+
+You can also read or write to the AXI BRAM Memory.
+```
+dd if=/dev/urandom bs=1 count=8192 of=TEST
+printf "%d\n" 0x200100000
+sudo dd if=TEST of=/dev/xdma0_h2c_0 count=1 bs=8192 seek=8590983168 oflag=seek_bytes
+sudo dd if=/dev/xdma0_c2h_0 of=RECV count=1 bs=8192 skip=8590983168 iflag=skip_bytes
+md5sum TEST RECV
+```
+
+![Access AXI BRAM using dd](img/dd_AXI_BRAM.png)
+
+[xdma_test.c](xdma_test.c) is a simple 
+
+![xdma_test.c XDMA File Access](img/xdma_test_0x200100000_0x200110000.png)
+
+
+
 
 ## Recreating the Design in Vivado
 
