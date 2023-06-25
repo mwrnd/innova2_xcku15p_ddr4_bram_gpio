@@ -228,9 +228,9 @@ md5sum TEST RECV
 
 ![Access AXI BRAM using dd](img/dd_AXI_BRAM.png)
 
-[xdma_test.c](xdma_test.c) is a simple 
+[xdma_test_main.c](xdma_test_main.c) is a simple C program that writes then reads to the given AXI Address which can be the DDR4 or BRAM and then toggles the LED.
 
-![xdma_test.c XDMA File Access](img/xdma_test_0x200100000_0x200110000.png)
+![xdma_test_main.c XDMA File Access](img/xdma_test_0x200100000_0x200110000.png)
 
 
 
