@@ -4,13 +4,13 @@ This is a simple [Vivado 2021.2](https://www.xilinx.com/support/download/index.h
 
 [**innova2_8gb_adlt_xdma_ddr4_demo**](https://github.com/mwrnd/innova2_8gb_adlt_xdma_ddr4_demo) is an update of this project for Vivado 2023.2.
 
+[**innova2_4gb_adit_xdma_ddr4_demo**](https://github.com/mwrnd/innova2_4gb_adit_xdma_ddr4_demo) is a version for the MNV303212A-AD**A**T and MNV303212A-AD**I**T.
+
+[**innova2_xdma_demo**](https://github.com/mwrnd/innova2_xdma_demo) is a simplified version without DDR4 that should work on all the Innova-2 variants: MNV303212A-ADLT, MNV303212A-ADAT, MNV303212A-ADIT, and MNV303611A-EDLT.
+
 Refer to the [innova2_flex_xcku15p_notes](https://github.com/mwrnd/innova2_flex_xcku15p_notes/) project for instructions on setting up an Innova-2 system with all drivers including [Xilinx's PCIe XDMA Drivers](https://github.com/Xilinx/dma_ip_drivers).
 
 Refer to [this tutorial](https://github.com/mwrnd/notes/tree/main/Vivado_XDMA_DDR4_Tutorial) for detailed instructions on generating a similar project from scratch.
-
-A test version for the [4GB MNV303212A-ADIT variant is available](https://github.com/mwrnd/innova2_ddr4_troubleshooting/tree/main/test_adit_mt40a512m16).
-
-Here is a [simple Vivado 2022.2 demo project for the MNV303611A-EDLT without DDR](https://github.com/mwrnd/innova2_mnv303611a_xcku15p_xdma) which will also work with the MNV303212A-ADLT.
 
 
 
